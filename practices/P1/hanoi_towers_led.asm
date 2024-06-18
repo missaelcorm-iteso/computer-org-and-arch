@@ -40,7 +40,7 @@ main:
     # OFFSET
     addi s11, zero, 0x20
     # N Disks
-    addi s0, zero, 8
+    addi s0, zero, 3
     # Offset between each tower
     addi t0, zero, 4
 
