@@ -56,7 +56,7 @@ main:
     addi s6, s5, 4        # C -> DST
 
     # Move B and C pointer to the start of stack
-    mul t0, s0, s11		# start = N * OFFSET = N * 0x20
+    slli t0, s0, 5		# start = N * OFFSET = N * 0x20
     add s2, s2, t0		# s2 -> s2 + start
     add s3, s3, t0		# s3 -> s3 + start
     
@@ -69,7 +69,7 @@ main:
     for: blt t1, t0, endfor # i >= temp_n
     # {
         add t3, zero, s1    # Temp pointer to Tower A t3 -> s1
-        mul t2, t0, s11     # Calc Index = i * OFFSET
+        slli t2, t0, 5      # Calc Index = i * OFFSET
         add t3, t3, t2      # Calc mem_addr to store "i"  t3 = t3 - Index
         addi t4, t0, 1
         sw t4, 0(t3)        # Store disk(i) to mem_addr
