@@ -30,11 +30,13 @@ volatile unsigned int *d_pad_ri = D_PAD_0_RIGHT;
 #define SNAKE_START_X 10
 #define SNAKE_START_Y 10
 
+// GAME STATES
 typedef enum {
     GAME_OVER,
     PLAYING
 } GameState;
 
+// DIRECTIONS
 typedef enum {
     UP,
     DOWN,
@@ -42,23 +44,27 @@ typedef enum {
     RIGHT
 } Direction;
 
+// Food struct
 typedef struct {
     unsigned y;
     unsigned x;
 } Food;
 
+// Snake segment struct
 typedef struct {
     unsigned int x;
     unsigned int y;
     Direction direction;
 } SnakeSegment;
 
+// Snake struct
 typedef struct {
     SnakeSegment segments[MAX_SNAKE_LENGTH];
     int length;
     Food food;
 } Snake;
 
+// Function prototypes
 void initSnake(Snake *snake) {
     snake->length = 1;
     snake->segments[0].x = SNAKE_START_X;
@@ -90,21 +96,24 @@ void clearBoard() {
             *(led_base + i * LED_MATRIX_0_WIDTH + (LED_MATRIX_0_WIDTH - 1 - j)) = BORDER_COLOR; // Right border
         }
     }
-
 }
 
+// Wait function
 void wait() {
     for (int i = 0; i < WAIT_NUM; i++);
 }
 
+// Draw the snake and the food
 void drawSnakeAndFood(Snake *snake) {
     // Draw the snake
     for (int i = 0; i < snake->length; i++) {
         for (int x = 0; x < PIXEL_SIZE; x++) {
             for (int y = 0; y < PIXEL_SIZE; y++) {
+                // Draw the food only once
                 if (i == 0) {
                     *(led_base + (snake->food.y + y) * LED_MATRIX_0_WIDTH + (snake->food.x + x)) = FOOD_COLOR;
                 }
+                // Draw the snake segments
                 *(led_base + (snake->segments[i].y + y) * LED_MATRIX_0_WIDTH + (snake->segments[i].x + x)) = SNAKE_COLOR;
             }
         }
@@ -112,32 +121,39 @@ void drawSnakeAndFood(Snake *snake) {
 }
 
 int main(){
+    // Initialize the snake
     Snake snake;
     initSnake(&snake);
 
+    // Clear the board
     clearBoard();
 
+    // Set the game state
     GameState gameState = PLAYING;
 
     int counter = 0;
     
-
     while(1){
+        // Play the game
         while (gameState == PLAYING) {
             // Clear the board
             clearBoard();
 
-            // Draw the food
+            // Set the food position
             if (snake.food.x == 0 && snake.food.y == 0) {
+                // Generate a new food position
                 int x = (rand()+counter) % LED_MATRIX_0_WIDTH-PIXEL_SIZE;
                 int y = (rand()+counter) % LED_MATRIX_0_HEIGHT-PIXEL_SIZE;
                 
+                // Make sure the food is at even coordinates
                 if (x % 2 != 0) x--;
                 if (y % 2 != 0) y--;
 
+                // Make sure the food is not at the border
                 if (x < PIXEL_SIZE) x = PIXEL_SIZE;
                 if (y < PIXEL_SIZE) y = PIXEL_SIZE;
 
+                // Set the food position
                 snake.food.x = x;
                 snake.food.y = y;
             }
@@ -147,15 +163,18 @@ int main(){
 
             // Move the snake
             for (int i = snake.length - 1; i > 0; i--) {
+                // Move each segment of the snake to the position of the previous segment
                 snake.segments[i].x = snake.segments[i - 1].x;
                 snake.segments[i].y = snake.segments[i - 1].y;
             }
 
+            // Change the direction of the snake's head
             if (*d_pad_up == 1 && snake.segments[0].direction != DOWN) snake.segments[0].direction = UP;
             else if (*d_pad_do == 1 && snake.segments[0].direction != UP) snake.segments[0].direction = DOWN;
             else if (*d_pad_le == 1 && snake.segments[0].direction != RIGHT) snake.segments[0].direction = LEFT;
             else if (*d_pad_ri == 1 && snake.segments[0].direction != LEFT) snake.segments[0].direction = RIGHT;
 
+            // Move the snake's head
             switch (snake.segments[0].direction) {
                 case UP:
                     snake.segments[0].y-=PIXEL_SIZE;
@@ -195,10 +214,14 @@ int main(){
             wait();
             counter++;
         }
-        
+
+        // Set restart flag true if SW0 is selected and the game is over
         int restart_flag = *(switch_base) & SW0 && gameState == GAME_OVER;
+
         // printf("Restart flag: %d\n", restart_flag);
         // printf("Game state: %d\n", gameState);
+
+        // Restart the game if the restart flag is true
         if (restart_flag) {
             // Restart the game
             initSnake(&snake);
