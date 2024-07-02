@@ -24,7 +24,7 @@ volatile unsigned int *d_pad_ri = D_PAD_0_RIGHT;
 #define MAX_SNAKE_LENGTH 50
 #define PIXEL_SIZE 2
 #define BOARD_SIZE (LED_MATRIX_0_WIDTH * LED_MATRIX_0_HEIGHT)
-#define WAIT_NUM 3000
+#define WAIT_NUM 1000
 
 // SNAKE POSITION
 #define SNAKE_START_X 10
@@ -100,7 +100,9 @@ void clearBoard() {
 
 // Wait function
 void wait() {
-    for (int i = 0; i < WAIT_NUM; i++);
+    volatile int dummy = 0;
+    for (int i = 0; i < WAIT_NUM; i++)
+        dummy++;
 }
 
 // Draw the snake and the food
