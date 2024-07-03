@@ -163,6 +163,11 @@ int snakeCollision(Snake *snake){
     return 0;
 }
 
+int snakeCollisionWithFood(Snake *snake){
+    // Check if the snake has collided with the food
+    return snake->segments[0].x == snake->food.x && snake->segments[0].y == snake->food.y;
+}
+
 int main(){
     // Initialize the snake
     Snake snake;
@@ -226,7 +231,7 @@ int main(){
             }
 
             // Check if the snake has eaten the food
-            if (snake.segments[0].x == snake.food.x && snake.segments[0].y == snake.food.y) {
+            if (snakeCollisionWithFood(&snake)) {
                 snake.length++;
                 snake.food.x = 0;
                 snake.food.y = 0;
