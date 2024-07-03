@@ -140,6 +140,14 @@ void setFoodPosition(Snake *snake, int seed){
     snake->food.y = y;
 }
 
+void moveSnake(Snake *snake){
+    for (int i = snake->length - 1; i > 0; i--) {
+        // Move each segment of the snake to the position of the previous segment
+        snake->segments[i].x = snake->segments[i - 1].x;
+        snake->segments[i].y = snake->segments[i - 1].y;
+    }
+}
+
 int main(){
     // Initialize the snake
     Snake snake;
@@ -168,11 +176,7 @@ int main(){
             drawSnakeAndFood(&snake);
 
             // Move the snake
-            for (int i = snake.length - 1; i > 0; i--) {
-                // Move each segment of the snake to the position of the previous segment
-                snake.segments[i].x = snake.segments[i - 1].x;
-                snake.segments[i].y = snake.segments[i - 1].y;
-            }
+            moveSnake(&snake);
 
             // Change the direction of the snake's head
             if (*d_pad_up == 1 && snake.segments[0].direction != DOWN) snake.segments[0].direction = UP;
