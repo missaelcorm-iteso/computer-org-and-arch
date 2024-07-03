@@ -168,6 +168,14 @@ int snakeCollisionWithFood(Snake *snake){
     return snake->segments[0].x == snake->food.x && snake->segments[0].y == snake->food.y;
 }
 
+void changeSnakeHeadDirection(Snake *snake){
+    // Change the direction of the snake's head
+    if (*d_pad_up == 1 && snake->segments[0].direction != DOWN) snake->segments[0].direction = UP;
+    else if (*d_pad_do == 1 && snake->segments[0].direction != UP) snake->segments[0].direction = DOWN;
+    else if (*d_pad_le == 1 && snake->segments[0].direction != RIGHT) snake->segments[0].direction = LEFT;
+    else if (*d_pad_ri == 1 && snake->segments[0].direction != LEFT) snake->segments[0].direction = RIGHT;
+}
+
 int main(){
     // Initialize the snake
     Snake snake;
@@ -199,10 +207,7 @@ int main(){
             moveSnake(&snake);
 
             // Change the direction of the snake's head
-            if (*d_pad_up == 1 && snake.segments[0].direction != DOWN) snake.segments[0].direction = UP;
-            else if (*d_pad_do == 1 && snake.segments[0].direction != UP) snake.segments[0].direction = DOWN;
-            else if (*d_pad_le == 1 && snake.segments[0].direction != RIGHT) snake.segments[0].direction = LEFT;
-            else if (*d_pad_ri == 1 && snake.segments[0].direction != LEFT) snake.segments[0].direction = RIGHT;
+            changeSnakeHeadDirection(&snake);
 
             // Move the snake's head
             switch (snake.segments[0].direction) {
