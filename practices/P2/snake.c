@@ -148,6 +148,11 @@ void moveSnake(Snake *snake){
     }
 }
 
+int wallCollision(Snake *snake){
+    // Check if the snake has collided with the wall
+    return snake->segments[0].x < PIXEL_SIZE || snake->segments[0].x >= LED_MATRIX_0_WIDTH-PIXEL_SIZE || snake->segments[0].y < PIXEL_SIZE || snake->segments[0].y >= LED_MATRIX_0_HEIGHT-PIXEL_SIZE;
+}
+
 int main(){
     // Initialize the snake
     Snake snake;
@@ -201,7 +206,7 @@ int main(){
             }
 
             // Check if the snake has collided with the wall
-            if (snake.segments[0].x < PIXEL_SIZE || snake.segments[0].x >= LED_MATRIX_0_WIDTH-PIXEL_SIZE || snake.segments[0].y < PIXEL_SIZE || snake.segments[0].y >= LED_MATRIX_0_HEIGHT-PIXEL_SIZE) {
+            if (wallCollision(&snake)) {
                 gameState = GAME_OVER;
             }
 
