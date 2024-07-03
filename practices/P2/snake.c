@@ -255,17 +255,12 @@ int main(){
         // Set restart flag true if SW0 is selected and the game is over
         int restart_flag = *(switch_base) & SW0 && gameState == GAME_OVER;
 
-        // printf("Restart flag: %d\n", restart_flag);
-        // printf("Game state: %d\n", gameState);
-
         // Restart the game if the restart flag is true
         if (restart_flag) {
             // Restart the game
             initSnake(&snake);
             gameState = PLAYING;
-            printf("Restarted game\n");
         }
-        printf("Game state: %d\n", gameState);
     }
     
     return 0;
