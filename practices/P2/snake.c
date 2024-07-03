@@ -122,6 +122,24 @@ void drawSnakeAndFood(Snake *snake) {
     }
 }
 
+void setFoodPosition(Snake *snake, int seed){
+    // Generate a new food position
+    int x = (rand()+seed) % LED_MATRIX_0_WIDTH-PIXEL_SIZE;
+    int y = (rand()+seed) % LED_MATRIX_0_HEIGHT-PIXEL_SIZE;
+    
+    // Make sure the food is at even coordinates
+    if (x % 2 != 0) x--;
+    if (y % 2 != 0) y--;
+
+    // Make sure the food is not at the border
+    if (x < PIXEL_SIZE) x = PIXEL_SIZE;
+    if (y < PIXEL_SIZE) y = PIXEL_SIZE;
+
+    // Set the food position
+    snake->food.x = x;
+    snake->food.y = y;
+}
+
 int main(){
     // Initialize the snake
     Snake snake;
@@ -143,21 +161,7 @@ int main(){
 
             // Set the food position
             if (snake.food.x == 0 && snake.food.y == 0) {
-                // Generate a new food position
-                int x = (rand()+counter) % LED_MATRIX_0_WIDTH-PIXEL_SIZE;
-                int y = (rand()+counter) % LED_MATRIX_0_HEIGHT-PIXEL_SIZE;
-                
-                // Make sure the food is at even coordinates
-                if (x % 2 != 0) x--;
-                if (y % 2 != 0) y--;
-
-                // Make sure the food is not at the border
-                if (x < PIXEL_SIZE) x = PIXEL_SIZE;
-                if (y < PIXEL_SIZE) y = PIXEL_SIZE;
-
-                // Set the food position
-                snake.food.x = x;
-                snake.food.y = y;
+                setFoodPosition(&snake, counter);
             }
 
             // Draw the snake and the food
