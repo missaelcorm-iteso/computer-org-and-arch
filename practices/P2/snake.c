@@ -176,6 +176,24 @@ void changeSnakeHeadDirection(Snake *snake){
     else if (*d_pad_ri == 1 && snake->segments[0].direction != LEFT) snake->segments[0].direction = RIGHT;
 }
 
+void moveSnakeHead(Snake *snake){
+    // Move the snake's head
+    switch (snake->segments[0].direction) {
+        case UP:
+            snake->segments[0].y-=PIXEL_SIZE;
+            break;
+        case DOWN:
+            snake->segments[0].y+=PIXEL_SIZE;
+            break;
+        case LEFT:
+            snake->segments[0].x-=PIXEL_SIZE;
+            break;
+        case RIGHT:
+            snake->segments[0].x+=PIXEL_SIZE;
+            break;
+    }
+}
+
 int main(){
     // Initialize the snake
     Snake snake;
@@ -210,20 +228,7 @@ int main(){
             changeSnakeHeadDirection(&snake);
 
             // Move the snake's head
-            switch (snake.segments[0].direction) {
-                case UP:
-                    snake.segments[0].y-=PIXEL_SIZE;
-                    break;
-                case DOWN:
-                    snake.segments[0].y+=PIXEL_SIZE;
-                    break;
-                case LEFT:
-                    snake.segments[0].x-=PIXEL_SIZE;
-                    break;
-                case RIGHT:
-                    snake.segments[0].x+=PIXEL_SIZE;
-                    break;
-            }
+            moveSnakeHead(&snake);
 
             // Check if the snake has collided with the wall
             if (wallCollision(&snake)) {
