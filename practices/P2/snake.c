@@ -153,6 +153,16 @@ int wallCollision(Snake *snake){
     return snake->segments[0].x < PIXEL_SIZE || snake->segments[0].x >= LED_MATRIX_0_WIDTH-PIXEL_SIZE || snake->segments[0].y < PIXEL_SIZE || snake->segments[0].y >= LED_MATRIX_0_HEIGHT-PIXEL_SIZE;
 }
 
+int snakeCollision(Snake *snake){
+    // Check if the snake has collided with itself
+    for (int i = 1; i < snake->length; i++) {
+        if (snake->segments[0].x == snake->segments[i].x && snake->segments[0].y == snake->segments[i].y) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 int main(){
     // Initialize the snake
     Snake snake;
@@ -211,11 +221,8 @@ int main(){
             }
 
             // Check if the snake has collided with itself
-            for (int i = 1; i < snake.length; i++) {
-                if (snake.segments[0].x == snake.segments[i].x && snake.segments[0].y == snake.segments[i].y) {
-                    gameState = GAME_OVER;
-                    break;
-                }
+            if(snakeCollision(&snake)){
+                gameState = GAME_OVER;
             }
 
             // Check if the snake has eaten the food
